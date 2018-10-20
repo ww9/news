@@ -1,0 +1,48 @@
+version: '2'
+# This is like a Makefile for https://github.com/go-task/task. A cross-platform Make written in Go.
+
+tasks:
+  # Run `go tool dist list` to list platforms available in your system
+  release:
+    cmds:
+      - task: release-osx
+      - task: release-linux
+      - task: release-windows
+
+  release-osx:
+    cmds:
+      - go build -o ./release/news-osx64
+    env:
+      CGO_ENABLED: '0'
+      GOOS: darwin
+      GOARCH: amd64
+
+  release-linux:
+    cmds:
+      - go build -o ./release/news-linux64
+    env:
+      CGO_ENABLED: '0'
+      GOOS: linux
+      GOARCH: amd64
+
+  release-windows:
+    cmds:
+      - go build -o ./release/news-win64
+    env:
+      CGO_ENABLED: '0'
+      GOOS: windows
+      GOARCH: amd64
+
+  install-deps:
+    desc: 
+    cmds:
+      go get ./...
+
+  test:
+    cmds:
+      - go test ./...
+
+  gdrive-windows:
+    desc: Example usage with Google Drive on Windows with verbose output
+    cmds:
+      - go run main.go -v -d "D:/gdrive/news"

@@ -48,7 +48,6 @@ If you have Go's `/bin` directory in `$PATH` env variable, you should be able to
 Windows, Linux and OSX binaries are available in `Releases`.
 
 # Todo
-- Link to next page
 - Badges/shields for github repo like this one: https://goreportcard.com/report/github.com/lfaoro/flares
 
 # License
