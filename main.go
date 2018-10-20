@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"html/template"
 	"net/http"
 	"os"
@@ -59,7 +58,6 @@ func main() {
 }
 
 func pressCTRLCToExit() {
-	fmt.Printf("\nPress CTRL+C to exit\n")
 	exitCh := make(chan struct{})
 	signalCh := make(chan os.Signal, 1)
 	signal.Notify(signalCh, os.Interrupt)
