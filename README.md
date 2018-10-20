@@ -53,6 +53,7 @@ That's it. No database, no configuration files, no HTTP server, no ads, no track
 
 ### Installing from code
 `go install -i github.com/ww9/news`
+
 If you have Go's `/bin` directory in `$PATH` env variable, you should be able to run `news` from anywhere.
 
 ### Downloading binaries
