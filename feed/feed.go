@@ -232,9 +232,9 @@ func (item *Item) SetTag() {
 
 func (agg *Aggregator) loadKnownURLs() error {
 	for i := 1; ; i++ {
-		filePath := agg.Directory + "/index.html"
+		filePath := filepath.Clean(agg.Directory + "/index.html")
 		if i > 1 {
-			filePath = fmt.Sprintf(agg.Directory+"/page%d.html", i)
+			filePath = filepath.Clean(fmt.Sprintf(agg.Directory+"/page%d.html", i))
 		}
 		if !fileExists(filePath) {
 			if i == 0 {
