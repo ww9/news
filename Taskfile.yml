@@ -2,8 +2,8 @@ version: '2'
 # This is like a Makefile for https://github.com/go-task/task. A cross-platform Make written in Go.
 
 tasks:
-  # Run `go tool dist list` to list platforms available in your system
   release:
+    desc: Run `go tool dist list` to list platforms available in your system
     cmds:
       - task: release-osx
       - task: release-linux
@@ -36,7 +36,7 @@ tasks:
   install-deps:
     desc: 
     cmds:
-      go get ./...
+      - go get ./...
 
   test:
     cmds:
