@@ -17,7 +17,7 @@ var flagTimeout = flag.Int("t", 10, "timeout in seconds when fetching feeds")
 var flagUpdateInterval = flag.Int("i", 10, "minutes to wait between updates")
 var flagItemsPerPage = flag.Int("n", 500, "number of items per page.html file. A new page.html file is created whenever index.html contains 2x that number")
 var flagVerbose = flag.Bool("v", false, "verbose mode outputs extra info when enabled")
-var flagTemplateFile = flag.String("c", "", "custom Go html/template file to to use when generating .html files. See `news/feed/template.go` in source for an example")
+var flagTemplateFile = flag.String("c", "", "optional custom Go html/template file to to use when generating .html files. See `news/feed/template.go` in source for an example")
 
 func main() {
 	log := logrus.New()

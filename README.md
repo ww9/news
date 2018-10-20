@@ -33,7 +33,7 @@ When `📰index.html` grows large (1000 items by default), the oldest 500 items 
 -n int		number of items per .html file. A new page.html file is created whenever 
 		index.html contains 2x that number (default 500)
 -t int		timeout in seconds when fetching feeds (default 10)
--c string	custom Go html/template file to to use when generating .html files. 
+-c string	optional custom Go html/template file to to use when generating .html files. 
 		See `news/feed/template.go` in source for an example
 -v    		verbose mode outputs extra info when enabled
 ```
