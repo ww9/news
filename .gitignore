@@ -1,0 +1,7 @@
+*.exe
+debug.test
+/vendor
+/rss/test_data/news
+/docs
+/news
+/releases
