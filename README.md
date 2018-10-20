@@ -9,7 +9,7 @@ News is a minimalist RSS/Atom aggregator that saves to HTML files:
   ├📰 page3.html
 ```
 
-[ANIMATED GIF HERE]
+![screenshot](feed/screenshot.png)
 
 #### Usage
 Run `news`
