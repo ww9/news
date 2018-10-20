@@ -1,7 +1,7 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE) [![Go Report Card](https://goreportcard.com/badge/github.com/ww9/news)](https://goreportcard.com/report/github.com/ww9/news)
 
 ### 📰 News
-News is a minimalist RSS/Atom aggregator that saves to HTML files:
+News is a minimalist RSS/Atom aggregator that saves to HTML files.
 ```
 📂news
   ├📰 index.html
@@ -9,21 +9,17 @@ News is a minimalist RSS/Atom aggregator that saves to HTML files:
   └📰 page3.html
 ```
 
-The generated HTML looks like this by default:
+That's it! No database, no configuration files, no HTTP server, no ads, no tracking and no javascript. Everything is stored in the HTML files which look like this:
 
 ![screenshot](feed/screenshot.png)
 
 ### Usage
 
-Run `news`
+Running `news` creates `📂news` directory containing a sample `📰index.html` file which you should edit with your own RSS/Atom feed sources.
 
-It creates `📂news` directory containing `📰index.html` file which you should edit with your own RSS/Atom feed sources.
-
-Every 10 minutes it fetches items from your feeds and saves what's new to `📰index.html`.
+Every 10 minutes it fetches news from your feeds and saves what's fresh to `📰index.html`.
 
 When `📰index.html` grows large (1000 items by default), the oldest 500 items are moved to `📰page2.html`.
-
-That's it. No database, no configuration files, no HTTP server, no ads, no tracking and no javascript.
 
 `📂news` can reside in Google Drive or Dropbox for easy access everywhere. This is how I use it:
 
@@ -35,10 +31,10 @@ That's it. No database, no configuration files, no HTTP server, no ads, no track
 -d string	directory to save html files in. "./news" is used by default and created if necessary
 -i int		minutes to wait between updates (default 10)
 -n int		number of items per .html file. A new page.html file is created whenever 
-			index.html contains 2x that number (default 500)
+		index.html contains 2x that number (default 500)
 -t int		timeout in seconds when fetching feeds (default 10)
 -c string	custom Go html/template file to to use when generating .html files. 
-			See `news/feed/template.go` in source for an example
+		See `news/feed/template.go` in source for an example
 -v    		verbose mode outputs extra info when enabled
 ```
 
@@ -57,7 +53,7 @@ That's it. No database, no configuration files, no HTTP server, no ads, no track
 If you have Go's `/bin` directory in `$PATH` env variable, you should be able to run `news` from anywhere.
 
 ### Downloading binaries
-Windows, Linux and OSX binaries are available in [Releases](https://github.com/ww9/news/releases) (soon).
+Windows, Linux and OSX binaries are available in [Releases](https://github.com/ww9/news/releases).
 
 ### License
 MIT
