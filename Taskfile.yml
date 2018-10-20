@@ -1,5 +1,5 @@
 version: '2'
-# This is like a Makefile for https://github.com/go-task/task. A cross-platform Make written in Go.
+# This is like a Makefile but for https://github.com/go-task/task which is a cross-platform Make written in Go.
 
 tasks:
   release:
