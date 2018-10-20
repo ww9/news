@@ -30,10 +30,10 @@ That's it. No database, no configuration files, no HTTP server, no ads, no track
 -d string	directory to save html files in. "./news" is used by default and created if necessary
 -i int		minutes to wait between updates (default 10)
 -n int		number of items per .html file. A new page.html file is created whenever 
-          index.html contains 2x that number (default 500)
+			index.html contains 2x that number (default 500)
 -t int		timeout in seconds when fetching feeds (default 10)
 -c string	custom Go html/template file to to use when generating .html files. 
-          See `news/feed/template.go` in source for an example
+			See `news/feed/template.go` in source for an example
 -v    		verbose mode outputs extra info when enabled
 ```
 
@@ -51,7 +51,7 @@ That's it. No database, no configuration files, no HTTP server, no ads, no track
 If you have Go's `/bin` directory in `$PATH` env variable, you should be able to run `news` from anywhere.
 
 ### Downloading binaries
-Windows, Linux and OSX binaries are available in `Releases`.
+Windows, Linux and OSX binaries are available in [Releases](https://github.com/ww9/news/releases) (soon).
 
 ### Todo
 - Badges/shields for github repo like this one: https://goreportcard.com/report/github.com/lfaoro/flares

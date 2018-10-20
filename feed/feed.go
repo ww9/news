@@ -100,8 +100,8 @@ func feedXMLParser(XML []byte) (items []Item, err error) {
 		return items, fmt.Errorf("could not parse XML: %s", err)
 	}
 	// if err != nil && strings.Contains(err.Error(), "invalid character entity") {
-	// 	cleanXML = []byte(unescapeXML(string(cleanXML)))
-	// 	feed, err = rss.Parse(cleanXML)
+	//      cleanXML = []byte(unescapeXML(string(cleanXML)))
+	//      feed, err = rss.Parse(cleanXML)
 	// }
 	for _, item := range feed.Items {
 		itemURL := strings.TrimSpace(item.Link)
@@ -120,7 +120,7 @@ func feedXMLParser(XML []byte) (items []Item, err error) {
 			}
 			log.Debugf("using %s to fill in feed %s item empty description", itemTitle, feed.Link)
 		}
-		items = append([]Item{Item{
+		items = append([]Item{{
 			Title: itemTitle,
 			URL:   itemURL,
 		}}, items...)
