@@ -9,9 +9,11 @@ News is a minimalist RSS/Atom aggregator that saves to HTML files:
   ├📰 page3.html
 ```
 
+The generated HTML looks like this by default:
+
 ![screenshot](feed/screenshot.png)
 
-#### Usage
+### Usage
 Run `news`
 
 It creates `📂news` directory containing `📰index.html` file which you should edit with your own RSS/Atom feed sources.
@@ -24,7 +26,7 @@ That's it. No database, no configuration files, no HTTP server, no ads, no track
 
 `📂news` can reside in Google Drive or Dropbox for easy access everywhere.
 
-#### Command-line arguments
+### Command-line arguments
 `news -h` prints:
 ```
 -d string	directory to save html files in. "./news" is used by default and created if necessary
@@ -37,7 +39,7 @@ That's it. No database, no configuration files, no HTTP server, no ads, no track
 -v    		verbose mode outputs extra info when enabled
 ```
 
-#### Running from code
+### Running from code
 `go get -u -i http://github.com/ww9/news`
 
 `cd $GOROOT/src/github.com/ww9/news`
@@ -46,12 +48,12 @@ That's it. No database, no configuration files, no HTTP server, no ads, no track
 
 `go run main.go`
 
-#### Installing from code
+### Installing from code
 `go install -i github.com/ww9/news`
 If you have Go's `/bin` directory in `$PATH` env variable, you should be able to run `news` from anywhere.
 
-#### Downloading binaries
+### Downloading binaries
 Windows, Linux and OSX binaries are available in [Releases](https://github.com/ww9/news/releases) (soon).
 
-#### License
+### License
 MIT
