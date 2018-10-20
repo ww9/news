@@ -9,7 +9,7 @@ var Tpl = template.Must(template.New("").Parse(`
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="data:image/x-icon;base64,AAABAAEAEBAQAAAAAAAoAQAAFgAAACgAAAAQAAAAIAAAAAEABAAAAAAAgAAAAAAAAAAAAAAAEAAAAAAAAAAhFAUAVUCzAJSHhQD1PycAo6OjAFmWqADo6e0ARCPZAFdUUQDe3t4AL5E6AHvF2wBIgbAAAAAAAAAAAAAAAAAAOqqqaZmZbMyqOqNoSEhszGZmZmZmZmZmiEhIZxEXaEiZmZlnEXdpmYSEhGN3c2SEmZmZYztzaZmISEhjuyNoSJmZmWO7U2mZhISEY4iDZIRmZmZmZmZmZgYAYABgYGAABgBgZgBgBmAGYGAGBgYGAABgYGYGBgYGAGBgBgZmBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" rel="icon" type="image/x-icon" />
-<title>RSS Reader</title>
+<title>News</title>
 <style type="text/css">
 html {
 	padding: 0;
