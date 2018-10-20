@@ -6,7 +6,7 @@ News is a minimalist RSS/Atom aggregator that saves to HTML files:
 📂news
   ├📰 index.html
   ├📰 page2.html
-  ├📰 page3.html
+  └📰 page3.html
 ```
 
 The generated HTML looks like this by default:
@@ -14,6 +14,9 @@ The generated HTML looks like this by default:
 ![screenshot](feed/screenshot.png)
 
 ### Usage
+
+![screenshot](feed/demo.gif)
+
 Run `news`
 
 It creates `📂news` directory containing `📰index.html` file which you should edit with your own RSS/Atom feed sources.
