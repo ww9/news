@@ -79,14 +79,12 @@ body {
 </style>
 </head>
 <body>
-<div class="container">{{range .Items}}
-<a class="item" target="_blank" href="{{.URL}}">{{if .Tag}}<div class="tag">{{.Tag}}</div>{{end}}{{.Title}}</a>{{end}}
-
-{{if gt .NextPage 1}}<a class="next" href="page{{.NextPage}}.html">Next</a>{{end}}
-
-</div>
 {{range $url, $title := .Feeds}}
 <a class="feed" href="{{$url}}">{{$title}}</a>{{end}}
+<div class="container">{{range .Items}}
+<a class="item" target="_blank" href="{{.URL}}">{{if .Tag}}<div class="tag">{{.Tag}}</div>{{end}}{{.Title}}</a>{{end}}
+{{if gt .NextPage 1}}<a class="next" href="page{{.NextPage}}.html">Next</a>{{end}}
+</div>
 
 </body>
 </html>`))
