@@ -27,7 +27,7 @@ tasks:
 
   release-windows:
     cmds:
-      - go build -o ./release/news-win64
+      - go build -o ./release/news-win64.exe
     env:
       CGO_ENABLED: '0'
       GOOS: windows
