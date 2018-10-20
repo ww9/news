@@ -15,8 +15,6 @@ The generated HTML looks like this by default:
 
 ### Usage
 
-![screenshot](feed/demo.gif)
-
 Run `news`
 
 It creates `📂news` directory containing `📰index.html` file which you should edit with your own RSS/Atom feed sources.
@@ -27,7 +25,9 @@ When `📰index.html` grows large (1000 items by default), the oldest 500 items 
 
 That's it. No database, no configuration files, no HTTP server, no ads, no tracking and no javascript.
 
-`📂news` can reside in Google Drive or Dropbox for easy access everywhere.
+`📂news` can reside in Google Drive or Dropbox for easy access everywhere. This is how I use it:
+
+![screenshot](feed/demo.gif)
 
 ### Command-line arguments
 `news -h` prints:
@@ -43,11 +43,11 @@ That's it. No database, no configuration files, no HTTP server, no ads, no track
 ```
 
 ### Running from code
-`go get -u -i http://github.com/ww9/news`
+`go get -u http://github.com/ww9/news`
 
 `cd $GOROOT/src/github.com/ww9/news`
 
-`go get ./...` to get dependencies
+`go get ./...` to fetch dependencies
 
 `go run main.go`
 
