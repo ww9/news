@@ -57,4 +57,4 @@ Windows, Linux and OSX binaries are available in [Releases](https://github.com/w
 
 ### License
 
-Dedicated to [Public Domain](https://gist.github.com/ww9/4c4481fb7b55186960a34266078c88b1). Do whatever you want with it, including changing the license of a copy to your liking and omitting the author.
+Dedicated to [Public Domain](https://gist.github.com/ww9/4c4481fb7b55186960a34266078c88b1). Do whatever you want with it, including changing the license of a copy and omitting the author.
