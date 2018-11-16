@@ -9,7 +9,7 @@ News is a minimalist RSS/Atom aggregator that saves to HTML files.
   └📰 page3.html
 ```
 
-That's it! No database, no configuration files, no HTTP server, no ads, no tracking and no javascript. Everything is stored in the HTML files which look like this:
+That's it! No database, no configuration files, no HTTP server, no ads, no tracking and no JavaScript. Everything is stored in the HTML files which look like this:
 
 ![screenshot](feed/screenshot.png)
 
@@ -56,4 +56,5 @@ If you have Go's `/bin` directory in `$PATH` env variable, you should be able to
 Windows, Linux and OSX binaries are available in [Releases](https://github.com/ww9/news/releases).
 
 ### License
-MIT
+
+Dedicated to [Public Domain](https://gist.github.com/ww9/4c4481fb7b55186960a34266078c88b1). Do whatever you want with it, including changing the license of a copy to your liking and omitting the author.
