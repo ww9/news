@@ -14,6 +14,8 @@ import (
 	"time"
 	"unicode"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/kennygrant/sanitize"
 )
 
@@ -49,7 +51,7 @@ func fileExists(f string) bool {
 	return !os.IsNotExist(err)
 }
 
-func makeURLDebouncer(wait time.Duration) func(URL string) string {
+func makeURLDebouncer(log *logrus.Logger, wait time.Duration) func(URL string) string {
 	lastAccessed := make(map[string]time.Time)
 	return func(URL string) string {
 		u, err := url.Parse(URL)
@@ -88,8 +90,8 @@ func unescapeXML(XML string) string {
 }
 
 // makeCachedURLFetcher is retired. It was used during initial phases of development to prevent spamming feed sources.
-func makeCachedURLFetcher(client *http.Client, cacheDir string) func(URL string) (content []byte, err error) {
-	fetcher := MakeURLFetcher(client)
+func makeCachedURLFetcher(log *logrus.Logger, minDomainRequestInterval time.Duration, client *http.Client, cacheDir string) func(URL string) (content []byte, err error) {
+	fetcher := MakeURLFetcher(log, minDomainRequestInterval, client)
 	return func(URL string) (content []byte, err error) {
 		cacheDir = filepath.Clean(cacheDir)
 		fileName := cacheDir + "/" + sanitize.BaseName(URL) + ".html"

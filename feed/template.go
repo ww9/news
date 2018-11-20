@@ -2,7 +2,8 @@ package feed
 
 import "html/template"
 
-// Tpl is the template used to render index.html and page.html files. Can be customized using -c command-line argument.
+// Tpl is the default template used to generate index.html and page.html files.
+// Can be customized using -template command-line argument.
 var Tpl = template.Must(template.New("").Parse(`
 <!DOCTYPE html><html>
 <head>

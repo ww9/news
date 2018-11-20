@@ -45,4 +45,4 @@ tasks:
   gdrive:
     desc: Example usage with Google Drive on Windows with verbose output
     cmds:
-      - go run main.go -d "D:/gdrive/news"
+      - go run main.go -dir "D:/gdrive/news"
