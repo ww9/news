@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gilliek/go-opml/opml"
 	"github.com/mmcdole/gofeed"
 	"github.com/sirupsen/logrus"
 
@@ -26,7 +27,7 @@ type Item struct {
 	Tag   string
 }
 
-// Aggregator is the core structure than fetches feeds and saves them to html
+// Aggregator is the core structure than fetches feeds and saves them to html. See Aggregator.Update()
 type Aggregator struct {
 	Items []Item // Ordered from newest to oldest. Always prepend new items.
 	// Feeds is a map of URLs -> Titles for feeds. This needs to be stored somewhere so reader knows from where to fetch news
@@ -38,23 +39,19 @@ type Aggregator struct {
 	pages        int
 	ItemsPerPage int
 	NextPage     int
-}
-
-var log = logrus.New()
-
-// SetLogger is used from main to set custom unified logger
-func SetLogger(logger *logrus.Logger) {
-	log = logger
+	log          *logrus.Logger
 }
 
 // New creates an Aggregator with default URL fetcher
 func New(directory string) (*Aggregator, error) {
 	client := &http.Client{Timeout: 10 * time.Second}
-	return NewWithCustom(directory, 1000, MakeURLFetcher(client))
+	log := logrus.New()
+	return NewWithCustom(log, directory, 1000, MakeURLFetcher(log, 30*time.Second, client))
 }
 
 // NewWithCustom allows for creating customized Aggregators such as custom URL fetcher for testing or with custom http.client
-func NewWithCustom(directory string, itemsPerPage int, URLFetcher func(URL string) ([]byte, error)) (*Aggregator, error) {
+// minDomainRequestInterval is the minimum time we must wait between calls to same domain. Aka debouncer. For cases like multiple reddit.com feeds.
+func NewWithCustom(log *logrus.Logger, directory string, itemsPerPage int, URLFetcher func(URL string) ([]byte, error)) (*Aggregator, error) {
 	if directory == "" {
 		directory = "news"
 	}
@@ -66,12 +63,13 @@ func NewWithCustom(directory string, itemsPerPage int, URLFetcher func(URL strin
 		URLFetcher:   URLFetcher,
 		ItemsPerPage: itemsPerPage,
 		pages:        1,
+		log:          log,
 	}
 
 	if !fileExists(agg.Directory) {
 		if agg.Directory == "news" {
 			if errDir := os.Mkdir(agg.Directory, os.ModeDir); errDir != nil {
-				return nil, fmt.Errorf("couldn't create dirextory: %s", errDir)
+				return nil, fmt.Errorf("couldn't create directory: %s", errDir)
 			}
 		} else {
 			return nil, fmt.Errorf("directory %s does not exist", agg.Directory)
@@ -85,11 +83,11 @@ func NewWithCustom(directory string, itemsPerPage int, URLFetcher func(URL strin
 		log.Infof("Created %s with sample feeds.\n", indexFile)
 	}
 
-	return agg, agg.loadKnownURLs()
+	return agg, agg.loadFeedsAndItemsFromHTMLFiles()
 }
 
-// feedXMLParser returns items ordered from oldest to newest. So we can always just append as long as template reads in inverted order.
-func feedXMLParser(XML []byte) (items []Item, err error) {
+// parseXML returns items ordered from oldest to newest. So we can always just append as long as template reads in inverted order.
+func (agg *Aggregator) parseXML(XML []byte) (items []Item, err error) {
 	cleanXML := cleanXML(XML)
 	items = make([]Item, 0)
 	parser := gofeed.NewParser()
@@ -109,7 +107,7 @@ func feedXMLParser(XML []byte) (items []Item, err error) {
 			itemURL = strings.TrimSpace(item.Custom["Comments"])
 		}
 		if itemURL == "" {
-			log.Debugf("skipping item from feed %s due to lack of URL", feed.Link)
+			agg.log.Debugf("skipping item from feed %s due to lack of URL", feed.Link)
 			continue
 		}
 		itemTitle := strings.TrimSpace(item.Title)
@@ -118,7 +116,7 @@ func feedXMLParser(XML []byte) (items []Item, err error) {
 			if itemTitle == "" {
 				itemTitle = itemURL
 			}
-			log.Debugf("using %s to fill in feed %s item empty description", itemTitle, feed.Link)
+			agg.log.Debugf("using %s to fill in feed %s item empty description", itemTitle, feed.Link)
 		}
 		items = append([]Item{{
 			Title: itemTitle,
@@ -131,12 +129,12 @@ func feedXMLParser(XML []byte) (items []Item, err error) {
 // MakeURLFetcher is the default HTTP client used to fetch feed XML.
 // The other one is fakeURLFetcher() used for testing.
 // There's also a retired makeCachedURLFetcher() which was using during initial phases of development and is kept in misc.go
-func MakeURLFetcher(client *http.Client) func(URL string) (content []byte, err error) {
-	antiFlood := makeURLDebouncer(30 * time.Second)
+func MakeURLFetcher(log *logrus.Logger, minDomainRequestInterval time.Duration, client *http.Client) func(URL string) (content []byte, err error) {
+	antiFlood := makeURLDebouncer(log, minDomainRequestInterval)
 	return func(URL string) (content []byte, err error) {
 		req, err := http.NewRequest("GET", antiFlood(URL), nil)
 		if err != nil {
-			log.Fatalln(err)
+			return nil, fmt.Errorf("could not create GET request to URL %s : %s", URL, err)
 		}
 		req.Header.Set("User-Agent", uarand.GetRandom())
 		req.Header.Set("Accept", "application/xml")
@@ -230,7 +228,7 @@ func (item *Item) SetTag() {
 	}
 }
 
-func (agg *Aggregator) loadKnownURLs() error {
+func (agg *Aggregator) loadFeedsAndItemsFromHTMLFiles() error {
 	for i := 1; ; i++ {
 		filePath := filepath.Clean(agg.Directory + "/index.html")
 		if i > 1 {
@@ -243,7 +241,7 @@ func (agg *Aggregator) loadKnownURLs() error {
 			break
 		}
 		agg.pages = i
-		log.Debugf("reading items from %s", filePath)
+		agg.log.Debugf("reading items from %s", filePath)
 		items, feeds, err := loadFromFile(filePath)
 		if err != nil {
 			return fmt.Errorf("could not load known URLs from file %s : %s", filePath, err)
@@ -258,14 +256,70 @@ func (agg *Aggregator) loadKnownURLs() error {
 	return nil
 }
 
-func createSampleIndex(file string) error {
-	return savePageToFile(file, []Item{}, map[string]string{
+func getSampleFeeds() map[string]string {
+	return map[string]string{
 		"https://www.reddit.com/r/golang/.rss": "/r/golang",
 		"https://news.ycombinator.com/rss":     "Hacker News",
-	}, 0)
+	}
 }
 
-// Update load feeds from index.html, fetches items from them and save everything back to index.html. Also generates pageX.html if necessary.
+func createSampleIndex(file string) error {
+	return savePageToFile(file, []Item{}, getSampleFeeds(), 0)
+}
+
+func (agg *Aggregator) ImportOPMLFile(filePath string) (importedFeeds int, err error) {
+	doc, err := opml.NewOPMLFromFile(filePath)
+	if err != nil {
+		return 0, err
+	}
+	feeds := make(map[string]string)
+	collectFeedsFromOPMLOutline(feeds, doc.Outlines())
+	if len(feeds) < 1 {
+		return 0, fmt.Errorf("no feed URLs found")
+	}
+	for URL, title := range feeds {
+		agg.Feeds[URL] = title
+	}
+	// Save feeds to index.html
+	indexFile := filepath.Clean(agg.Directory + "/index.html")
+	indexItems, _, err := loadFromFile(indexFile)
+	if err != nil {
+		return 0, fmt.Errorf("could not save imported feeds to %s: %s", indexFile, err)
+	}
+	if err := savePageToFile(indexFile, indexItems, agg.Feeds, agg.pages); err != nil {
+		return 0, fmt.Errorf("could not save imported feeds to %s: %s", indexFile, err)
+	}
+
+	return len(feeds), nil
+}
+
+// Apparently outlines can be recursive, so we must be able to dig deep
+// Example 1: <outline text="24 ways" htmlUrl="http://24ways.org/" type="rss" xmlUrl="http://feeds.feedburner.com/24ways"/>
+// Example 2:
+// <outline title="News" text="News">
+// 		<outline text="Big News Finland" title="Big News Finland" type="rss" xmlUrl="http://www.bignewsnetwork.com/?rss=37e8860164ce009a"/>
+// 		<outline text="Euronews" title="Euronews" type="rss" xmlUrl="http://feeds.feedburner.com/euronews/en/news/"/>
+// 		<outline text="Reuters Top News" title="Reuters Top News" type="rss" xmlUrl="http://feeds.reuters.com/reuters/topNews"/>
+//		<outline text="Yahoo Europe" title="Yahoo Europe" type="rss" xmlUrl="http://rss.news.yahoo.com/rss/europe"/>
+// </outline>
+func collectFeedsFromOPMLOutline(feeds map[string]string, outlines []opml.Outline) {
+	for _, outline := range outlines {
+
+		if outline.XMLURL != "" {
+			feeds[outline.XMLURL] = strings.TrimSpace(outline.Text)
+			// If feed title is empty, use URL instead
+			if feeds[outline.XMLURL] == "" {
+				feeds[outline.XMLURL] = outline.XMLURL
+			}
+		}
+		if len(outline.Outlines) > 0 {
+			collectFeedsFromOPMLOutline(feeds, outline.Outlines)
+		}
+	}
+}
+
+// Update reads feed URLs from index.html, fetches RSS/Atom feed from each URL found and save everything back to index.html.
+// Also generates new pageX.html files when index.html is too large.
 func (agg *Aggregator) Update() (err error) {
 	indexFile := agg.Directory + "/index.html"
 	indexItems, feeds, err := loadFromFile(indexFile)
@@ -277,17 +331,18 @@ func (agg *Aggregator) Update() (err error) {
 	}
 	agg.Items = indexItems
 	agg.Feeds = feeds
+	// Access feeds in random order
 	suffledURLs := shuffleMapKeys(agg.Feeds)
 	for _, feedURL := range suffledURLs {
-		log.Debugf("reading items from %s", feedURL)
+		agg.log.Debugf("reading items from %s", feedURL)
 		contents, err := agg.URLFetcher(feedURL)
 		if err != nil {
-			log.Errorf("%s : %s", feedURL, err)
+			agg.log.Errorf("%s : %s", feedURL, err)
 			continue
 		}
-		items, err := feedXMLParser(contents)
+		items, err := agg.parseXML(contents)
 		if err != nil {
-			log.Errorf("%s: %s", feedURL, err)
+			agg.log.Errorf("%s: %s", feedURL, err)
 			continue
 		}
 		for i := len(items) - 1; i >= 0; i-- {
@@ -302,10 +357,10 @@ func (agg *Aggregator) Update() (err error) {
 		for len(agg.Items) >= agg.ItemsPerPage*2 {
 			pageItems := agg.Items[agg.ItemsPerPage:]
 			agg.pages++
-			log.Debugf("saving items to page%d.html", agg.pages)
+			agg.log.Debugf("saving items to page%d.html", agg.pages)
 			pageFile := fmt.Sprintf(agg.Directory+"/page%d.html", agg.pages)
 			if err := savePageToFile(pageFile, pageItems, agg.Feeds, agg.pages-1); err != nil {
-				log.Errorf("error saving page %s : %s", pageFile, err)
+				agg.log.Errorf("error saving page %s : %s", pageFile, err)
 				continue
 			}
 			agg.Items = agg.Items[:agg.ItemsPerPage]
@@ -313,11 +368,11 @@ func (agg *Aggregator) Update() (err error) {
 		// User might have updated feeds in index.html, so we must read it again to prevent overwriting
 		_, feedsToSave, err := loadFromFile(indexFile)
 		if err != nil {
-			log.Errorf("error reading feeds before writing to %s: %s", indexFile, err)
+			agg.log.Errorf("error reading feeds before writing to %s: %s", indexFile, err)
 			feedsToSave = agg.Feeds
 		}
 		if err := savePageToFile(indexFile, agg.Items, feedsToSave, agg.pages); err != nil {
-			log.Errorf("error saving page %s : %s", indexFile, err)
+			agg.log.Errorf("error saving page %s : %s", indexFile, err)
 			continue
 		}
 	}
