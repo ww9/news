@@ -63,6 +63,13 @@ If you have Go's `/bin` directory in `$PATH` env variable, you should be able to
 ## Downloading binaries
 Windows, Linux and OSX binaries are available in [Releases](https://github.com/ww9/news/releases).
 
+## Todo
+
+- [ ] More tests
+- [ ] Go modules
+- [ ] Vendor
+- [ ] Dockerfile
+
 ## License
 
 [The Unlicense](http://unlicense.org/), [Public Domain](https://gist.github.com/ww9/4c4481fb7b55186960a34266078c88b1). As free as it gets.
