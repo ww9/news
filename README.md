@@ -21,14 +21,18 @@ Every 10 minutes it fetches news from your feeds and saves what's fresh to `📰
 
 When `📰index.html` grows large (1000 items by default), the oldest 500 items are moved to `📰page2.html`.
 
-`📂news` can reside in Google Drive or Dropbox for easy access everywhere. This is how I use it:
+`📂news` can reside in Google Drive or Dropbox for easy access everywhere. 
 
-![screenshot](demo.gif)
+This is how I use it:
+
+```bash
+news -wait 30 -dir "D:/gdrive/news"
+```
 
 ## Command-line arguments
 `news -h` prints:
 ```
-  -d, dir string
+  -dir string
         directory to store html files. By default ./news is used and created if necessary
   -items int
         number of items per page.html file. A new page.html file is created whenever index.html contains 2x that number (default 500)
@@ -40,7 +44,7 @@ When `📰index.html` grows large (1000 items by default), the oldest 500 items 
         custom Go html/template file to use when generating .html files. See news/feed/template.go
   -timeout int
         timeout in seconds when fetching feeds (default 10)
-  -v, verbose
+  -verbose
         verbose mode outputs extra info when enabled
   -wait int
         minutes to wait between updates (default 10)
