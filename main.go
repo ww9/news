@@ -13,11 +13,11 @@ import (
 	"github.com/ww9/news/feed"
 )
 
-var flagDir = flag.String("d, dir", "", "directory to store html files. By default ./news is used and created if necessary")
+var flagDir = flag.String("dir", "", "directory to store html files. By default ./news is used and created if necessary")
 var flagTimeout = flag.Int("timeout", 10, "timeout in seconds when fetching feeds")
 var flagUpdateInterval = flag.Int("wait", 10, "minutes to wait between updates")
 var flagItemsPerPage = flag.Int("items", 500, "number of items per page.html file. A new page.html file is created whenever index.html contains 2x that number")
-var flagVerbose = flag.Bool("v, verbose", false, "verbose mode outputs extra info when enabled")
+var flagVerbose = flag.Bool("verbose", false, "verbose mode outputs extra info when enabled")
 var flagTemplateFile = flag.String("template", "", "custom Go html/template file to use when generating .html files. See `news/feed/template.go`")
 var flagOPMLFile = flag.String("opml", "", "path to OPML file containing feed URLS to be imported. Existing feed URLs are ovewritten, not duplicated")
 var flagMinDomainRequestInterval = flag.Int("noflood", 30, "minium seconds between calls to same domain to avoid flooding")
