@@ -51,7 +51,7 @@ news -wait 30 -dir "D:/gdrive/news"
 ```
 
 ## Running from code
-`go get -u http://github.com/ww9/news`
+`go get -uv github.com/ww9/news`
 
 `cd $GOROOT/src/github.com/ww9/news`
 
