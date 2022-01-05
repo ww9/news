@@ -69,6 +69,8 @@ Windows, Linux and OSX binaries are available in [Releases](https://github.com/w
 
 ## Todo
 
+- [ ] Parallelize feed fetching
+- [ ] Replace logrus with std log
 - [ ] More tests
 - [ ] Go modules
 - [ ] Vendor
