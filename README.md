@@ -1,4 +1,4 @@
-[![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](http://unlicense.org/) [![Go Report Card](https://goreportcard.com/badge/github.com/ww9/news)](https://goreportcard.com/report/github.com/ww9/news)
+[![License: Unlicense](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/license/mit/) [![Go Report Card](https://goreportcard.com/badge/github.com/ww9/news)](https://goreportcard.com/report/github.com/ww9/news)
 
 # 📰 News
 
@@ -28,7 +28,7 @@ When `📰index.html` grows large (1000 items by default), the oldest 500 items 
 This is how I use it:
 
 ```bash
-news -wait 30 -dir "D:/gdrive/news"
+news -wait 30 -dir "/mnt/d/gdrive/news"
 ```
 
 ## Command-line arguments
@@ -54,27 +54,31 @@ news -wait 30 -dir "D:/gdrive/news"
         minutes to wait between updates (default 10)
 ```
 
-## Running from code
+## Running from source
 
-`go get -uv github.com/ww9/news`
+`git clone https://github.com/ww9/news`
 
-`cd $GOROOT/src/github.com/ww9/news`
+`cd news`
 
-`go get ./...` to fetch dependencies
+`go run main`
 
-`go run main.go`
-
-## Installing from code
-
-`go install -i github.com/ww9/news`
-
-If you have Go's `/bin` directory in `$PATH` env variable, you should be able to run `news` from anywhere.
+![running from code](screenshot-running-from-code.png)
 
 ## Downloading binaries
 
 Windows, Linux and OSX binaries are available in [Releases](https://github.com/ww9/news/releases).
 
+## How to build releases
+
+Install Taskfile (https://taskfile.dev/installation/). I did it like this:
+
+`sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b ~/.local/bin`
+
+Then run `task release` to build binaries for Windows, Linux and OSX in a directory called `release`.
+
 ## Todo
+
+It works great but we can always improve! Here are some ideas:
 
 - [ ] Parallelize feed fetching
 - [ ] Replace logrus with std log
@@ -86,7 +90,3 @@ Windows, Linux and OSX binaries are available in [Releases](https://github.com/w
 - [ ] Put retrieval date in tooltip.
 - [ ] Move `<style>` bellow body so important and editable info stays at the top of index.html
 - [ ] Add this repository to the bottom of the page.
-
-## License
-
-[The Unlicense](http://unlicense.org/), [Public Domain](https://gist.github.com/ww9/4c4481fb7b55186960a34266078c88b1). As free as it gets.
