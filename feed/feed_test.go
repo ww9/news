@@ -12,34 +12,34 @@ import (
 // Tests if new items are read and written in the correct order to the HTML file. This isn't fully automated
 // One should run this test then open test_data/news to check if it has correct feeds and items
 func Test_HTMLFileGeneratedOnNewItems(t *testing.T) {
-	dir := "test_data/news"
-	failIfError(t, os.RemoveAll(dir))
-	failIfError(t, os.MkdirAll(dir, os.ModeDir))
-	failIfError(t, copyFileContents("test_data/1feed_0items.html", dir+"/index.html"))
-	agg, err := NewWithCustom(logrus.New(), dir, 4, fakeURLFetcher)
+	dir, err := os.Getwd()
+	t.Error(dir)
+	failIfError(t, os.RemoveAll("test_data/news"))
+	failIfError(t, os.MkdirAll("test_data/news", 0755))
+	failIfError(t, copyFileContents("test_data/1feed_0items.html", "test_data/news/index.html"))
+	feedFetcher, err := NewWithCustom(logrus.New(), "test_data/news", 4, fakeURLFetcher)
 	failIfError(t, err)
-	if len(agg.Feeds) != 1 {
-		t.Errorf("Expected to have 1 feed imported from test_data/1feed_0items.html but found %d", len(agg.Feeds))
+	if len(feedFetcher.Feeds) != 1 {
+		t.Errorf("Expected to have 1 feed imported from test_data/1feed_0items.html but found %d", len(feedFetcher.Feeds))
 	}
-	if agg.Feeds["https://www.reddit.com/r/golang/.rss"] != "/r/golang" {
+	if feedFetcher.Feeds["https://www.reddit.com/r/golang/.rss"] != "/r/golang" {
 		t.Error("Could not find expected '/r/golang' feed")
 	}
-	// It's safe to call Update() 40 times in hsort succession since we are using a fake URL fectcher
+	// It's safe to call Update() 40 times in short succession since we are using a fake URL fectcher
 	for i := 0; i < 40; i++ {
-		failIfError(t, agg.Update())
+		failIfError(t, feedFetcher.Update())
 	}
-
 }
 
 // Tests happy path when importing OPML file including ovewriting of pre-existent feed URL
 func Test_OPMLFileImport(t *testing.T) {
-	dir := "test_data/news"
-	failIfError(t, os.RemoveAll(dir))
-	failIfError(t, os.MkdirAll(dir, os.ModeDir))
-	failIfError(t, copyFileContents("test_data/1feed_0items.html", dir+"/index.html"))
-	agg, err := NewWithCustom(logrus.New(), dir, 1000, fakeURLFetcher)
+	failIfError(t, os.RemoveAll("test_data/news"))
+	failIfError(t, os.MkdirAll("test_data/news", 0755))
+	failIfError(t, copyFileContents("test_data/feed_0items.html", "test_data/news/index.html"))
+	agg, err := NewWithCustom(logrus.New(), "test_data/news", 1000, fakeURLFetcher)
 	failIfError(t, err)
-	failIfError(t, agg.ImportOPMLFile("test_data/feeds.opml"))
+	_, err = agg.ImportOPMLFile("test_data/feeds.opml")
+	failIfError(t, err)
 	// we know the imported OPML file has 69 items including "https://www.reddit.com/r/golang/.rss" which
 	// should overwrite the one feed loaded from 1feed_0items.html making our feed URL count be 69
 	if len(agg.Feeds) != 69 {

@@ -68,7 +68,7 @@ func NewWithCustom(log *logrus.Logger, directory string, itemsPerPage int, URLFe
 
 	if !fileExists(agg.Directory) {
 		if agg.Directory == "news" {
-			if errDir := os.Mkdir(agg.Directory, os.ModeDir); errDir != nil {
+			if errDir := os.Mkdir(agg.Directory, 0755); errDir != nil {
 				return nil, fmt.Errorf("couldn't create directory: %s", errDir)
 			}
 		} else {
@@ -297,10 +297,12 @@ func (agg *Aggregator) ImportOPMLFile(filePath string) (importedFeeds int, err e
 // Example 1: <outline text="24 ways" htmlUrl="http://24ways.org/" type="rss" xmlUrl="http://feeds.feedburner.com/24ways"/>
 // Example 2:
 // <outline title="News" text="News">
-// 		<outline text="Big News Finland" title="Big News Finland" type="rss" xmlUrl="http://www.bignewsnetwork.com/?rss=37e8860164ce009a"/>
-// 		<outline text="Euronews" title="Euronews" type="rss" xmlUrl="http://feeds.feedburner.com/euronews/en/news/"/>
-// 		<outline text="Reuters Top News" title="Reuters Top News" type="rss" xmlUrl="http://feeds.reuters.com/reuters/topNews"/>
-//		<outline text="Yahoo Europe" title="Yahoo Europe" type="rss" xmlUrl="http://rss.news.yahoo.com/rss/europe"/>
+//
+//	<outline text="Big News Finland" title="Big News Finland" type="rss" xmlUrl="http://www.bignewsnetwork.com/?rss=37e8860164ce009a"/>
+//	<outline text="Euronews" title="Euronews" type="rss" xmlUrl="http://feeds.feedburner.com/euronews/en/news/"/>
+//	<outline text="Reuters Top News" title="Reuters Top News" type="rss" xmlUrl="http://feeds.reuters.com/reuters/topNews"/>
+//	<outline text="Yahoo Europe" title="Yahoo Europe" type="rss" xmlUrl="http://rss.news.yahoo.com/rss/europe"/>
+//
 // </outline>
 func collectFeedsFromOPMLOutline(feeds map[string]string, outlines []opml.Outline) {
 	for _, outline := range outlines {

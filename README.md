@@ -1,7 +1,9 @@
 [![License: Unlicense](https://img.shields.io/badge/license-Unlicense-blue.svg)](http://unlicense.org/) [![Go Report Card](https://goreportcard.com/badge/github.com/ww9/news)](https://goreportcard.com/report/github.com/ww9/news)
 
 # 📰 News
+
 News is a minimalist RSS/Atom aggregator that saves to HTML files.
+
 ```
 📂news
   ├📰 index.html
@@ -21,7 +23,7 @@ Every 10 minutes it fetches news from your feeds and saves what's fresh to `📰
 
 When `📰index.html` grows large (1000 items by default), the oldest 500 items are moved to `📰page2.html`.
 
-`📂news` can reside in Google Drive or Dropbox for easy access everywhere. 
+`📂news` can reside in Google Drive or Dropbox for easy access everywhere.
 
 This is how I use it:
 
@@ -30,7 +32,9 @@ news -wait 30 -dir "D:/gdrive/news"
 ```
 
 ## Command-line arguments
+
 `news -h` prints:
+
 ```
   -dir string
         directory to store html files. By default ./news is used and created if necessary
@@ -51,6 +55,7 @@ news -wait 30 -dir "D:/gdrive/news"
 ```
 
 ## Running from code
+
 `go get -uv github.com/ww9/news`
 
 `cd $GOROOT/src/github.com/ww9/news`
@@ -60,11 +65,13 @@ news -wait 30 -dir "D:/gdrive/news"
 `go run main.go`
 
 ## Installing from code
+
 `go install -i github.com/ww9/news`
 
 If you have Go's `/bin` directory in `$PATH` env variable, you should be able to run `news` from anywhere.
 
 ## Downloading binaries
+
 Windows, Linux and OSX binaries are available in [Releases](https://github.com/ww9/news/releases).
 
 ## Todo
@@ -72,9 +79,13 @@ Windows, Linux and OSX binaries are available in [Releases](https://github.com/w
 - [ ] Parallelize feed fetching
 - [ ] Replace logrus with std log
 - [ ] More tests
-- [ ] Go modules
 - [ ] Vendor
 - [ ] Dockerfile
+- [ ] Serve over HTTP if started with `-http` flag
+- [ ] Colorize HTML lines based on retrieval age. So we know just be looking what is new.
+- [ ] Put retrieval date in tooltip.
+- [ ] Move `<style>` bellow body so important and editable info stays at the top of index.html
+- [ ] Add this repository to the bottom of the page.
 
 ## License
 

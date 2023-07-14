@@ -34,7 +34,7 @@ body {
 	padding: 1em 0.5em 0.5em 0.5em;
 	color: #000;
 	font-weight: bold;
-	background: #EEE;
+	background: #ddd;
 	border-bottom: 1px solid #ccc;
 }
 .tag {
