@@ -1,5 +1,6 @@
-version: '2'
+version: '3'
 # This is like a Makefile but for https://github.com/go-task/task which is a cross-platform Make written in Go.
+# To run it, install Task (https://taskfile.dev/installation/) then run `task release`
 
 tasks:
   release:
